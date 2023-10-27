@@ -14,16 +14,18 @@ use App\Http\Controllers\StudentController;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+// Route::get('/', function () {
+//     return view('index');
+// });
 
 Route::controller(SchoolController::class)->group(function(){
-    Route::get('/schools','index')->name('schools.index');
+    Route::get('/','index')->name('schools.index');
     Route::get('/schools/create','create')->name('schools.create');
     Route::post('/schools','store')->name('schools.store');
-    // Route::post('/schools/addmorePost','addmorePost')->name('addmorePost');
-
+    Route::put('/schools/{school}','update')->name('schools.update');
+    Route::get('/schools/{school}/edit','edit')->name('schools.edit');
+    Route::get('/schools/{school}/show','show')->name('schools.show');
+    Route::delete('/schools/{school}/destroy','destroy')->name('schools.destroy');
 });
 // Route::controller(StudentController::class)->group(function(){
 //     Route::post('/students','store')->name('students.store');

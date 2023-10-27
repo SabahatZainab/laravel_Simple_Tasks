@@ -1,40 +1,29 @@
 @extends('app.layout')
 @section('content')
-    <!-- <div class="row">
-        <div class="col-2"></div>
-        <div class="col-8">
-            <h1>Add School With Multiple Students...</h1>
-        </div>
-        <div class="col-2"></div>
-    </div> -->
-    
-    <form action="{{ route('schools.store') }}" method="POST">
+    <form action="{{ route('schools.update', $school->id) }}" method="POST">
+        @csrf
+        @method('PUT')
     <div class="row">
         <div class="col-2"></div>
         <div class="col-8" style="background-color: violet; padding: 10px; margin: 10px;">
-            <h5><b>Add School</b></h5>
+            <h5><b>Update School</b></h5>
         </div>
         <div class="col-2"></div>
     </div>
     <div class="row">
         <div class="col-2"></div>
         <div class="col-md-8">
-                    @csrf
-                    <div class="form-group">
-                        <!-- <label for="name">Name</label> -->
-                        <input type="hidden" class="form-control" id="school_id" name="school_id" required>
-                    </div>
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="sch_name" name="sch_name" required>
+                        <input type="text" class="form-control" id="sch_name" name="sch_name" value = "{{ $school->name }}" required>
                     </div>
                     <div class="form-group">
                         <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" name="city" required>
+                        <input type="text" class="form-control" id="city" name="city" value = "{{ $school->city }}"  required>
                     </div>
                     <div class="form-group">
                         <label for="date">Date</label>
-                        <input type="date" class="form-control" id="date" name="date" required>
+                        <input type="date" class="form-control" id="date" name="date" value = "{{ $school->date }}" required>
                     </div>
 
                     <!-- Add Student Button -->
@@ -49,14 +38,14 @@
     <div class="row">
         <div class="col-2"></div>
         <div class="col-8" style="background-color: violet; padding: 10px; margin: 10px;">
-            <h5><b>Add Student</b></h5>
+            <h5><b>Update Student</b></h5>
         </div>
         <div class="col-2"></div>
     </div>
     <div class="row">
         <div class="col-2"></div>
         <div class="col-8">
-        <table class="table table-bordered" id="dynamicTable" style="padding:20px; margin:20px;">
+        <table class="table table-bordered" id="dynamicTable" style="pUpdateing:20px; margin:20px;">
             <thead>
                 <tr>
                 <th scope="col">Name</th>
@@ -68,20 +57,25 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><input type="text" name="addmore[0][name]" placeholder="Student Name" class="form-control" /></td>  
-                    <td><input type="text" name="addmore[0][father]" placeholder="Father Name" class="form-control" /></td>  
-                    <td><input type="text" name="addmore[0][address]" placeholder="Address" class="form-control" /></td>  
-                    <td><input type="text" name="addmore[0][class]" placeholder="Class" class="form-control" /></td>  
-                    <td><input type="text" name="addmore[0][profile]" placeholder="Profile" class="form-control" /></td>  
-                    <td><button type="button" name="add" id="add" class="btn btn-success">AddMore</button></td>  
-                        
+            @foreach($students as $key => $std)
+                <tr>    
+                    <input type="hidden" name="addmore[{{$key}}][id]"value="{{ $std->id }}"  />
+                    <td><input type="text" name="addmore[{{$key}}][name]" placeholder="Student Name" value="{{ $std->name }}" class="form-control" /></td>  
+                    <td><input type="text" name="addmore[{{$key}}][father]" placeholder="Father Name" value="{{ $std->father_name }}" class="form-control" /></td>  
+                    <td><input type="text" name="addmore[{{$key}}][address]" placeholder="Address" value="{{ $std->address }}" class="form-control" /></td>  
+                    <td><input type="text" name="addmore[{{$key}}][class]" placeholder="Class" value="{{ $std->class }}" class="form-control" /></td>  
+                    <td><input type="text" name="addmore[{{$key}}][profile]" placeholder="Profile" value="{{ $std->profile }}" class="form-control" /></td>  
+                    
+                    @if(!isset($students[$key+1]))
+                        <td><button type="button" name="add" id="add" class="btn btn-success">AddMore</button></td>  
+                    @endif
                 </tr>
+            @endforeach
                 
             </tbody>
             
         </table>
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-success">Update</button>
         <a href="{{ route('schools.index') }}"><button type="button" class="btn btn-danger">Cancel</button></a>
         </div>
         <div class="col-2"></div>
