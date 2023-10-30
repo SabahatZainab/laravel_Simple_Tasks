@@ -1,6 +1,16 @@
 @extends('app.layout')
 @section('content')
     <form action="{{ route('schools.update', $school->id) }}" method="POST">
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
         @csrf
         @method('PUT')
     <div class="row">
@@ -15,15 +25,15 @@
         <div class="col-md-8">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="sch_name" name="sch_name" value = "{{ $school->name }}" required>
+                        <input type="text" class="form-control" id="sch_name" name="sch_name" value = "{{ $school->name }}">
                     </div>
                     <div class="form-group">
                         <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" name="city" value = "{{ $school->city }}"  required>
+                        <input type="text" class="form-control" id="city" name="city" value = "{{ $school->city }}" >
                     </div>
                     <div class="form-group">
                         <label for="date">Date</label>
-                        <input type="date" class="form-control" id="date" name="date" value = "{{ $school->date }}" required>
+                        <input type="date" class="form-control" id="date" name="date" value = "{{ $school->date }}">
                     </div>
 
                     <!-- Add Student Button -->

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\School;
 use App\Models\Student;
+use App\Models\Image;
+use Ramsey\Uuid\Uuid;
 
 class SchoolController extends Controller
 {
@@ -23,22 +25,35 @@ class SchoolController extends Controller
             'sch_name' => 'required',
             'city' => 'required',
             'date' => 'required',
-            'name.*' => 'required',
-            'father_name.*' => 'required',
-            'address.*' => 'required',
-            'class.*' => 'required',
-            'profile.*' => 'required',
+            'image' => 'required',
+            'addmore.*.name' => 'required',
+            'addmore.*.father' => 'required',
+            'addmore.*.address' => 'required',
+            'addmore.*.class' => 'required',
+            'addmore.*.profile' => 'required',
         ]);
-
+        
         $school = School::create([
             'name' => $request->sch_name,
             'city' => $request->city,
             'date' => $request->date,
         ]);
+        //Saving Image-School
+        $input = $request->all();
+        $school_record = School::find($school->id);
+       
+
+        
+        
+        $image = new Image(['image' => $request->image]);
+      
+        $school_record->imageable()->save($image);
+
         $studentsData = [];
         $studentsArray = $request->input('addmore');
         foreach ($studentsArray as $studentInfo) {
             $studentsData[] = [
+                'id'            => Uuid::uuid4()->toString(),
                 'name'          => is_null($studentInfo['name'])?" ":$studentInfo['name'],
                 'father_name'   => is_null($studentInfo['father'])?" ":$studentInfo['father'],
                 'address'       => is_null($studentInfo['address'])?" ":$studentInfo['address'],
@@ -58,15 +73,15 @@ class SchoolController extends Controller
     }
     public function update(Request $request, School $school)
     {
-        $validation = $request->validate([
+        $request->validate([
             'sch_name' => 'required',
             'city' => 'required',
             'date' => 'required',
-            'name.*' => 'required',
-            'father_name.*' => 'required',
-            'address.*' => 'required',
-            'class.*' => 'required',
-            'profile.*' => 'required',
+            'addmore.*.name' => 'required',
+            'addmore.*.father' => 'required',
+            'addmore.*.address' => 'required',
+            'addmore.*.class' => 'required',
+            'addmore.*.profile' => 'required',
         ]);
         $school = School::findOrFail($school->id);
 
@@ -91,6 +106,7 @@ class SchoolController extends Controller
                 }else{
 
                     Student::insert([
+                        'id'  => Uuid::uuid4()->toString(),
                         'name' => $studentData['name'],
                         'father_name' => $studentData['father'],
                         'address' => $studentData['address'],
@@ -105,11 +121,10 @@ class SchoolController extends Controller
         }
         return redirect()->route('schools.index')->with('success', 'School and students updated successfully.');      
     }
-    public function show(School $schools)
+    public function show(School $school)
     {
-        // dd($schools);
-        // $students = $schools->students;
-        // return view('show',compact('schools','students'));
+        $students = $school->students;
+        return view('show',compact('school','students'));
     }
     public function destroy(School $school)
     {

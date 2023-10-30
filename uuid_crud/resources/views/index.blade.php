@@ -6,9 +6,14 @@
             <h1>SCHOOL MANAGEMENT</h1>
         </div>
         <div class="col-2">
-            <a href="{{ route('schools.create') }}"><button type="button" class="btn btn-primary">Create</button></a>
+            <a href="{{ route('schools.create') }}"><button type="button" class="btn btn-success">Create</button></a>
         </div>
     </div>
+    @if(session()->has('success'))
+        <div class="alert alert-success">
+            {{ session()->get('success')}}
+        </div>
+    @endif
     <div class="row" style="padding: 20px; margin: 20px;">
         <div class="col-2"></div>
         <div class="col-8">

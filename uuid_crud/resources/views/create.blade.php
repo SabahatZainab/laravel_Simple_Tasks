@@ -1,14 +1,16 @@
 @extends('app.layout')
-@section('content')
-    <!-- <div class="row">
-        <div class="col-2"></div>
-        <div class="col-8">
-            <h1>Add School With Multiple Students...</h1>
-        </div>
-        <div class="col-2"></div>
-    </div> -->
-    
+@section('content')    
     <form action="{{ route('schools.store') }}" method="POST">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     <div class="row">
         <div class="col-2"></div>
         <div class="col-8" style="background-color: violet; padding: 10px; margin: 10px;">
@@ -22,19 +24,23 @@
                     @csrf
                     <div class="form-group">
                         <!-- <label for="name">Name</label> -->
-                        <input type="hidden" class="form-control" id="school_id" name="school_id" required>
+                        <input type="hidden" class="form-control" id="school_id" name="school_id">
                     </div>
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" class="form-control" id="sch_name" name="sch_name" required>
+                        <label for="name"><b>Name</b></label>
+                        <input type="text" class="form-control" id="sch_name" name="sch_name">
                     </div>
                     <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" name="city" required>
+                        <label for="city"><b>City</b></label>
+                        <input type="text" class="form-control" id="city" name="city">
                     </div>
                     <div class="form-group">
-                        <label for="date">Date</label>
-                        <input type="date" class="form-control" id="date" name="date" required>
+                        <label for="date"><b>Date</b></label>
+                        <input type="date" class="form-control" id="date" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label for="image" class="form-label"><b>Upload Image of School</b></label>
+                        <input type="file" class="form-control" id="image" name="image">
                     </div>
 
                     <!-- Add Student Button -->
@@ -97,7 +103,7 @@
         $("#add").click(function () 
         {
             ++i;
-            $("#dynamicTable").append('<tr><td><input type="text" name="addmore['+i+'][name]" placeholder="Name" class="form-control" /></td><td><input type="text" name="addmore['+i+'][father]" placeholder="Father Name" class="form-control" /></td><td><input type="text" name="addmore['+i+'][address]" placeholder="Address" class="form-control" /></td><td><input type="text" name="addmore['+i+'][class]" placeholder="Class" class="form-control" /></td><td><input type="text" name="addmore['+i+'][profile]" placeholder="Profile" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>');
+            $("#dynamicTable").append('<tr><td><input type="text" name="addmore['+i+'][name]" placeholder="Student Name" class="form-control" /></td><td><input type="text" name="addmore['+i+'][father]" placeholder="Father Name" class="form-control" /></td><td><input type="text" name="addmore['+i+'][address]" placeholder="Address" class="form-control" /></td><td><input type="text" name="addmore['+i+'][class]" placeholder="Class" class="form-control" /></td><td><input type="text" name="addmore['+i+'][profile]" placeholder="Profile" class="form-control" /></td><td><button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>');
         });
         $(document).on('click', '.remove-tr', function(){  
                 $(this).parents('tr').remove();
