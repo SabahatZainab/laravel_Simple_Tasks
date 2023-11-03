@@ -10,10 +10,43 @@ use Ramsey\Uuid\Uuid;
 
 class SchoolController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $schools = School::paginate(3);
+        $schools = School::all();
         return view('index', compact('schools'));
+        if ($request->ajax()) {
+            print_r($request);
+            die("ok");
+            $data = School::select('*');
+            return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('school_name', function($row){
+                         return $row->school_name;
+                    })
+                    ->addColumn('school_city', function($row){
+                         return $row->school_city;
+                    })
+                    ->filter(function ($instance) use ($request) {
+                        if (!empty($request->get('school_name'))) {
+                            $instance->where('school_name', 'LIKE', "%{$request->get('school_name')}%");
+                        }
+                        if (!empty($request->get('school_city'))) {
+                            $instance->where('school_city', 'LIKE', "%{$request->get('school_city')}%");
+                        }
+                        if (!empty($request->get('search'))) {
+                             $instance->where(function($w) use($request){
+                                $search = $request->get('search');
+                                $w->orWhere('name', 'LIKE', "%$search%")
+                                  ->orWhere('email', 'LIKE', "%$search%");
+                            });
+                        }
+                    })
+                    ->rawColumns(['school_name', 'school_city'])
+                    ->make(true);
+                }
+        
+                    return view('index');
+                    
     }
     public function create()
     {
