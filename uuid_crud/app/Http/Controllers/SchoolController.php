@@ -12,7 +12,7 @@ class SchoolController extends Controller
 {
     public function index()
     {
-        $schools = School::all();
+        $schools = School::paginate(3);
         return view('index', compact('schools'));
     }
     public function create()
